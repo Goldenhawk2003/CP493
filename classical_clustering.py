@@ -1,5 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+from evaluate import davies_bouldin_index
+from sklearn.metrics import rand_score
 
 def initialize_centroids_kmeans_plus_plus(data, k):
     """Initialize centroids using the k-means++ algorithm."""
@@ -66,20 +71,29 @@ def kmeans(data, k, max_iters=100, tol=1e-4):
 
 
 if __name__ == "__main__":
-    # Generate sample data
-    np.random.seed(42)
-    data = np.random.rand(1000, 2)
+    # Load the Iris dataset
+    iris = load_iris()
+    data = iris.data
+    ground_truth = iris.target 
 
     # Apply k-means clustering
     k = 3
     centroids, labels = kmeans(data, k)
+    silhouette_avg = silhouette_score(data, labels, metric='euclidean')
+    print(f"Silhouette Score = {silhouette_avg}")
+
+    dbi = davies_bouldin_index(data, centroids, labels, k)
+    print(f"Davies-Bouldin Index: {dbi}")
+
+    ri = rand_score(ground_truth,labels)
+    print(f"Rand Index: {ri}")
 
     # Plot the clusters
     plt.scatter(data[:, 0], data[:, 1], c=labels, cmap='viridis')
     plt.scatter(centroids[:, 0], centroids[:, 1], c='red', marker='x')
-    plt.title("K-Means Clustering")
-    plt.xlabel("Feature 1")
-    plt.ylabel("Feature 2")
+    plt.title("K-Means Clustering on Iris Dataset")
+    plt.xlabel("Sepal Length")
+    plt.ylabel("Sepal Width")
     plt.show()
 
 """

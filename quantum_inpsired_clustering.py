@@ -76,7 +76,7 @@ def quantum_kmeans(data, k, max_iters=100, tol=1e-4):
     return centroids, labels
 
 # Generate random quantum state for 10 qubits
-num_qubits = 10
+num_qubits = 3
 state = random_state(num_qubits)
 
 data = encode_data_to_qubits(np.array(state.tolist()), num_qubits)
